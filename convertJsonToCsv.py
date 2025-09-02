@@ -20,18 +20,14 @@ cleaned = re.sub(r",\s*([}\]])", r"\1", data)
 # Now parse
 parsed = json.loads(cleaned)
 
-# Save as CSV
-import pandas as pd
-df = pd.json_normalize(parsed)  # flatten if nested
-df.to_csv("dataset/votingDataset.csv", index=False)
-
-
-with open("dataset/votingDataset.json", "r", encoding="utf-8") as f:
-    data = json.load(f)
-
 # If it's a dict of dicts → convert to dataframe
 if isinstance(data, dict):
-    df = pd.DataFrame.from_dict(data, orient="index")
+    df = pd.DataFrame.from_dict(parsed, orient="index")
 else:
-    df = pd.DataFrame(data)
+    df = pd.DataFrame(parsed)
+
+
+# Save as CSV
+df.to_csv("dataset/votingDataset.csv", index=False)
+print("✅ JSON cleaned and converted to CSV successfully.")
 
